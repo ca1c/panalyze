@@ -1,6 +1,6 @@
 {
-  "name": "portscanner",
-  "version": "0.0.1",
+  "name": "panalyze",
+  "version": "0.0.2",
   "description": "A portscanner written in nodejs",
   "main": "index.js",
   "bin": {
@@ -12,6 +12,7 @@
   "author": "Talon Bragg",
   "license": "MIT",
   "dependencies": {
+    "chalk": "^2.4.2",
     "connection-tester": "^0.2.0",
     "yargs": "^13.2.4"
   }

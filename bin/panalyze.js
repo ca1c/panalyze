@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 const connectionTester = require('connection-tester');
+const chalk = require('chalk');
 
 require('yargs')
     .scriptName("panalyze")
@@ -21,12 +22,18 @@ require('yargs')
             describe: 'the ip to scan ports of'
         })
     }, function (argv) {
+        this.port = 80;
         connectionTester.test(
             argv.ip,
-            80,
+            this.port,
             1000,
             (err, output) => {
-                console.log(output);
+                if(err) throw err;
+                else {
+                    if(output.success == false) {
+                        console.log(this.port);
+                    }
+                }
             }
         )
     })
