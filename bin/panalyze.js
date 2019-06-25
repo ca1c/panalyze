@@ -29,46 +29,66 @@ require('yargs')
             describe: 'second number of port range (optional but must have both numbers if using)',
         })
     }, function (argv) {
-            if(argv.options == 'q') {
-                for(let i = 0; i < portOptions.quickScanArray.length; i++) {
-                    connectionTester.test(
-                        argv.ip,
-                        portOptions.quickScanArray[i],
-                        1000,
-                        (err, output) => {
-                            if(err) throw err;
-                            else {
-                                if(output.success == false) {
-                                    console.log(`${logSymbols.error} ${chalk.blue('Port:')} ${chalk.green(portOptions.quickScanArray[i])} ${chalk.blue('IP:')} ${chalk.green(argv.ip)}`);
-                                }
-                                else if(output.success == true) {
-                                    console.log(`${logSymbols.success} ${chalk.blue('Port:')} ${chalk.green(portOptions.quickScanArray[i])} ${chalk.blue('IP:')} ${chalk.green(argv.ip)}`);
+            if(!argv.ip) {
+                console.log(`${logSymbols.warning} ${chalk.yellow('Please provide the ip of the host you would like to scan')}`)
+            }
+            if (!argv.options) {
+                console.log(`${logSymbols.warning} ${chalk.yellow('Please provide the type of scan you would like to start')}`);
+            }
+            else if(argv.options) {
+                if(argv.options == 'q') {
+                    for(let i = 0; i < portOptions.quickScanArray.length; i++) {
+                        connectionTester.test(
+                            argv.ip,
+                            portOptions.quickScanArray[i],
+                            1000,
+                            (err, output) => {
+                                if(err) throw err;
+                                else {
+                                    if(output.success == false) {
+                                        console.log(`${logSymbols.error} ${chalk.blue('Port:')} ${chalk.green(portOptions.quickScanArray[i])} ${chalk.blue('IP:')} ${chalk.green(argv.ip)}`);
+                                    }
+                                    else if(output.success == true) {
+                                        console.log(`${logSymbols.success} ${chalk.blue('Port:')} ${chalk.green(portOptions.quickScanArray[i])} ${chalk.blue('IP:')} ${chalk.green(argv.ip)}`);
+                                    }
                                 }
                             }
+                        )
+                    }
+                }
+                if(argv.options == 'r') {
+                    if(argv.options == 'r' && argv.rangeFN > 0 && argv.rangeSN < 65535) {
+                        for(let i = argv.rangeFN; i - 1 < argv.rangeSN; i++) {
+                            connectionTester.test(
+                                argv.ip,
+                                i,
+                                1000,
+                                (err, output) => {
+                                    if(err) throw err;
+                                    else {
+                                        if(output.success == false) {
+                                            console.log(`${logSymbols.error} ${chalk.blue('Port:')} ${chalk.green(i)} ${chalk.blue('IP:')} ${chalk.green(argv.ip)}`);
+                                        }
+                                        else if(output.success == true) {
+                                            console.log(`${logSymbols.success} ${chalk.blue('Port:')} ${chalk.green(i)} ${chalk.blue('IP:')} ${chalk.green(argv.ip)}`);
+                                        }
+                                    }
+                                }
+                            )
                         }
-                    )
+                    }
+                    
+                    else if(argv.options == 'r' && !argv.rangeFN || !argv.rangeSN) {
+                        console.log(`${logSymbols.warning} ${chalk.yellow('Please either provide the first, last or both range numbers')}`);
+                    }
+                    else if(argv.options == 'r' && argv.rangeFN <= 0 || argv.rangeSN > 65535) {
+                        console.log(`${logSymbols.warning} ${chalk.yellow('The first range number must be greater than 1 and the second number must be less than 65535')}`);
+                    }
+                    else {
+                        console.log(`${logSymbols.warning} ${chalk.yellow('Please give a valid scan type')}`)
+                    }
                 }
             }
-            if(argv.options == 'r' && argv.rangeFN > 0 && argv.rangeSN < 65535) {
-                for(let i = argv.rangeFN; i - 1 < argv.rangeSN; i++) {
-                    connectionTester.test(
-                        argv.ip,
-                        i,
-                        1000,
-                        (err, output) => {
-                            if(err) throw err;
-                            else {
-                                if(output.success == false) {
-                                    console.log(`${logSymbols.error} ${chalk.blue('Port:')} ${chalk.green(i)} ${chalk.blue('IP:')} ${chalk.green(argv.ip)}`);
-                                }
-                                else if(output.success == true) {
-                                    console.log(`${logSymbols.success} ${chalk.blue('Port:')} ${chalk.green(i)} ${chalk.blue('IP:')} ${chalk.green(argv.ip)}`);
-                                }
-                            }
-                        }
-                    )
-                }
-            } 
     })
     .help()
     .argv
