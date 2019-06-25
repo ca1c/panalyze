@@ -11,28 +11,25 @@ const portOptions = {
 require('yargs')
     .scriptName("panalyze")
     .usage('$0 <cmd> [args]')
-    .command('hello [name]', 'welcome ter yargs!', (yargs) => {
-        yargs.positional('name', {
-            type: 'string',
-            default: 'Cambi',
-            describe: 'the name to say hello to'
-        })
-    }, function (argv) {
-        console.log('hello', argv.name, 'welcome to yargs!')
-    })
-    .command('analyze [ip] [options]', 'ip address', (yargs) => {
+    .command('analyze [ip] [options] [rangeFN] [rangeSN]', 'ip address', (yargs) => {
         yargs.positional('ip', {
             type: 'string',
-            default: 'your ip',
             describe: 'ip to be scanned'
         })
         yargs.positional('options', {
             type:'string',
-            default: 'quickscan',
             describe: 'type of scan'
         })
+        yargs.positional('rangeFN', {
+            type: 'string',
+            describe: 'first number of port range (optional but must have both numbers if using)',
+        })
+        yargs.positional('rangeSN', {
+            type: 'string',
+            describe: 'second number of port range (optional but must have both numbers if using)',
+        })
     }, function (argv) {
-            if(argv.options == 'quickscan') {
+            if(argv.options == 'q') {
                 for(let i = 0; i < portOptions.quickScanArray.length; i++) {
                     connectionTester.test(
                         argv.ip,
@@ -51,7 +48,27 @@ require('yargs')
                         }
                     )
                 }
-            }   
+            }
+            if(argv.options == 'r' && argv.rangeFN > 0 && argv.rangeSN < 65535) {
+                for(let i = argv.rangeFN; i - 1 < argv.rangeSN; i++) {
+                    connectionTester.test(
+                        argv.ip,
+                        i,
+                        1000,
+                        (err, output) => {
+                            if(err) throw err;
+                            else {
+                                if(output.success == false) {
+                                    console.log(`${logSymbols.error} ${chalk.blue('Port:')} ${chalk.green(i)} ${chalk.blue('IP:')} ${chalk.green(argv.ip)}`);
+                                }
+                                else if(output.success == true) {
+                                    console.log(`${logSymbols.success} ${chalk.blue('Port:')} ${chalk.green(i)} ${chalk.blue('IP:')} ${chalk.green(argv.ip)}`);
+                                }
+                            }
+                        }
+                    )
+                }
+            } 
     })
     .help()
     .argv
