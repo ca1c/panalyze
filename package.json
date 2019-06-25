@@ -1,6 +1,6 @@
 {
   "name": "panalyze",
-  "version": "0.0.3",
+  "version": "0.1.0",
   "description": "A portscanner written in nodejs",
   "main": "index.js",
   "bin": {
