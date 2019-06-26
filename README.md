@@ -3,7 +3,7 @@
 
 **Usage:**
 
-`$ panalyze [ip] [options] [rangeFN] [rangeSN]`
+`$ panalyze analyze [ip] [options] [rangeFN] [rangeSN]`
 
 `[ip]` is the ip of the host that you want to scan.
 
