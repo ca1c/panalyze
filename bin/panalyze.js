@@ -3,6 +3,7 @@
 const connectionTester = require('connection-tester');
 const logSymbols = require('log-symbols');
 const chalk = require('chalk');
+const getIP = require('external-ip')();
 
 const portOptions = {
     quickScanArray: [20, 21, 22, 23, 25, 53, 67, 68, 69, 80, 110, 123, 137, 138, 139, 143, 161, 162, 179, 389, 443, 636, 989, 990]
@@ -89,6 +90,16 @@ require('yargs')
                     }
                 }
             }
+    })
+    .command('publicip', 'returns client public ip', (yargs) => {
+        console.log(chalk.green('Searching...'))
+    }, function (argv) {
+            getIP((err, ip) => {
+                if(err) {
+                    throw err;
+                }
+                console.log(chalk.blue(ip));
+            });
     })
     .help()
     .argv

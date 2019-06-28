@@ -14,7 +14,9 @@
   "dependencies": {
     "chalk": "^2.4.2",
     "connection-tester": "^0.2.0",
+    "external-ip": "^2.1.1",
     "log-symbols": "^3.0.0",
+    "superagent": "^5.1.0",
     "yargs": "^13.2.4"
   }
 }
