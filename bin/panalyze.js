@@ -111,11 +111,16 @@ require('yargs')
             console.log(chalk.blue(ip));
         });
     })
-    .command('localaddresses', 'returns', (yargs) => {
+    .command('localaddresses', 'returns ip addresses and mac addresses of all local devices connected to your network', (yargs) => {
         console.log(chalk.green('Searching...'))
     }, function (argv) {
         find().then(devices => {
-            console.log(devices);
+            // console.log(devices);
+            for (let i = 0; i < devices.length; i++) {
+                let device = devices[i];
+                let name = device.name.split('.');
+                console.log(`${chalk.underline(name[0])} ${chalk.green(device.ip)} ${chalk.blue(device.mac)}`)
+            }
         })
     })
     .help()
