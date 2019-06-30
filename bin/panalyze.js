@@ -111,5 +111,10 @@ require('yargs')
             console.log(chalk.blue(ip));
         });
     })
+    .command('localaddresses', 'returns', (yargs) => {
+        console.log(chalk.green('Searching...'))
+    }, function (argv) {
+        console.log(ip.subnet('192.168.1.2', '255.255.255.192'));
+    })
     .help()
     .argv
