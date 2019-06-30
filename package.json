@@ -16,6 +16,7 @@
     "connection-tester": "^0.2.0",
     "external-ip": "^2.1.1",
     "ip": "^1.1.5",
+    "local-devices": "^2.0.0",
     "log-symbols": "^3.0.0",
     "superagent": "^5.1.0",
     "yargs": "^13.2.4"

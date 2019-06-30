@@ -4,7 +4,7 @@ const connectionTester = require('connection-tester');
 const logSymbols = require('log-symbols');
 const chalk = require('chalk');
 const getIP = require('external-ip')();
-const ip = require('ip');
+const find = require('local-devices');
 
 const portOptions = {
     quickScanArray: [20, 21, 22, 23, 25, 53, 67, 68, 69, 80, 110, 123, 137, 138, 139, 143, 161, 162, 179, 389, 443, 636, 989, 990]
@@ -114,7 +114,9 @@ require('yargs')
     .command('localaddresses', 'returns', (yargs) => {
         console.log(chalk.green('Searching...'))
     }, function (argv) {
-        console.log(ip.subnet('192.168.1.2', '255.255.255.192'));
+        find().then(devices => {
+            console.log(devices);
+        })
     })
     .help()
     .argv
