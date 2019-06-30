@@ -4,6 +4,7 @@ const connectionTester = require('connection-tester');
 const logSymbols = require('log-symbols');
 const chalk = require('chalk');
 const getIP = require('external-ip')();
+const ip = require('ip');
 
 const portOptions = {
     quickScanArray: [20, 21, 22, 23, 25, 53, 67, 68, 69, 80, 110, 123, 137, 138, 139, 143, 161, 162, 179, 389, 443, 636, 989, 990]
@@ -29,7 +30,7 @@ require('yargs')
             type: 'string',
             describe: 'second number of port range (optional but must have both numbers if using)',
         })
-    }, function(argv) {
+    }, function (argv) {
         let scannedip;
         if (!argv.ip) {
             console.log(`${logSymbols.warning} ${chalk.yellow('Please provide the ip of the host you would like to scan')}`)
@@ -44,6 +45,8 @@ require('yargs')
                 scannedip = ip;
                 scan();
             });
+        } else if (ip.isV4Format(argv.ip) == false) {
+            console.log(`${logSymbols.warning} ${chalk.yellow('Ip must be in the correct IPV4 format, example: 127.0.0.1')}`)
         }
         if (!argv.options) {
             console.log(`${logSymbols.warning} ${chalk.yellow('Please provide the type of scan you would like to start')}`);
@@ -100,7 +103,7 @@ require('yargs')
     })
     .command('publicip', 'returns client public ip', (yargs) => {
         console.log(chalk.green('Searching...'))
-    }, function(argv) {
+    }, function (argv) {
         getIP((err, ip) => {
             if (err) {
                 throw err;
