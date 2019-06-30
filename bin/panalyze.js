@@ -119,7 +119,7 @@ require('yargs')
             for (let i = 0; i < devices.length; i++) {
                 let device = devices[i];
                 let name = device.name.split('.');
-                console.log(`${chalk.underline(name[0])} ${chalk.green(device.ip)} ${chalk.blue(device.mac)}`)
+                console.log(`${name[0]} ${chalk.green(device.ip)} ${chalk.blue(device.mac)}`)
             }
         })
     })
