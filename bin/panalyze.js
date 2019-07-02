@@ -69,8 +69,7 @@ require('yargs')
                                         console.log(`${logSymbols.error} ${chalk.blue('Port:')} ${chalk.green(portOptions.quickScanArray[i])} ${chalk.blue('IP:')} ${chalk.green(scannedip)}`);
                                         data.push(`{success: false, port: ${portOptions.quickScanArray[i]}, ip: ${scannedip}}`);
                                         resolve();
-                                    } 
-                                    if (output.success == true) {
+                                    } else if (output.success == true) {
                                         console.log(`${logSymbols.success} ${chalk.blue('Port:')} ${chalk.green(portOptions.quickScanArray[i])} ${chalk.blue('IP:')} ${chalk.green(scannedip)}`);
                                         data.push(`{"success": true, "port": "${portOptions.quickScanArray[i]}", "ip": "${scannedip}"}`);
                                         resolve();
@@ -81,7 +80,6 @@ require('yargs')
                     }
                 })
                 scanPromise.then(() => {
-                    console.log(data);
                     let realdata = JSON.stringify(data);
                     fs.writeFile('data/temporary.json', JSON.parse(realdata), (err) => {
                         if (err) throw err;
