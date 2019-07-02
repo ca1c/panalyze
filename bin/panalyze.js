@@ -91,24 +91,41 @@ require('yargs')
                 })
             }
             if (argv.options == 'r') {
+                let data = [];
                 if (argv.options == 'r' && argv.rangeFN > 0 && argv.rangeSN < 65535) {
-                    for (let i = argv.rangeFN; i - 1 < argv.rangeSN; i++) {
-                        connectionTester.test(
-                            scannedip,
-                            i,
-                            1000,
-                            (err, output) => {
-                                if (err) throw err;
-                                else {
-                                    if (output.success == false) {
-                                        console.log(`${logSymbols.error} ${chalk.blue('Port:')} ${chalk.green(i)} ${chalk.blue('IP:')} ${chalk.green(scannedip)}`);
-                                    } else if (output.success == true) {
-                                        console.log(`${logSymbols.success} ${chalk.blue('Port:')} ${chalk.green(i)} ${chalk.blue('IP:')} ${chalk.green(scannedip)}`);
+                    var scanPromise = new Promise(function(resolve, reject) {
+                        for (let i = argv.rangeFN; i - 1 < argv.rangeSN; i++) {
+                            connectionTester.test(
+                                scannedip,
+                                i,
+                                1000,
+                                (err, output) => {
+                                    if (err) reject(err);
+                                    else {
+                                        if (output.success == false) {
+                                            console.log(`${logSymbols.error} ${chalk.blue('Port:')} ${chalk.green(i)} ${chalk.blue('IP:')} ${chalk.green(scannedip)}`);
+                                            data.push(`{success: false, port: ${i}, ip: ${scannedip}}`);
+                                            resolve();
+                                        } else if (output.success == true) {
+                                            console.log(`${logSymbols.success} ${chalk.blue('Port:')} ${chalk.green(i)} ${chalk.blue('IP:')} ${chalk.green(scannedip)}`);
+                                            data.push(`{"success": true, "port": "${i}", "ip": "${scannedip}"}`);
+                                            resolve();
+                                        }
                                     }
                                 }
-                            }
-                        )
-                    }
+                            )
+                        }
+                    })
+                    scanPromise.then(() => {
+                        let realdata = JSON.stringify(data);
+                        fs.writeFile('data/temporary.json', JSON.parse(realdata), (err) => {
+                            if (err) throw err;
+    
+                            console.log('file saved temporarily');
+                        });
+                    }).catch((err) => {
+                        console.log(err);
+                    })
                 } else if (argv.options == 'r' && !argv.rangeFN || !argv.rangeSN) {
                     console.log(`${logSymbols.warning} ${chalk.yellow('Please either provide the first, last or both range numbers')}`);
                 } else if (argv.options == 'r' && argv.rangeFN <= 0 || argv.rangeSN > 65535) {
