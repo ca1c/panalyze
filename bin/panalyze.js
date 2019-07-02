@@ -5,6 +5,7 @@ const logSymbols = require('log-symbols');
 const chalk = require('chalk');
 const getIP = require('external-ip')();
 const find = require('local-devices');
+const fs = require('fs');
 
 const portOptions = {
     quickScanArray: [20, 21, 22, 23, 25, 53, 67, 68, 69, 80, 110, 123, 137, 138, 139, 143, 161, 162, 179, 389, 443, 636, 989, 990]
@@ -68,7 +69,7 @@ require('yargs')
                                     data.push({success: false, port: portOptions.quickScanArray[i], ip: scannedip});
                                 } else if (output.success == true) {
                                     console.log(`${logSymbols.success} ${chalk.blue('Port:')} ${chalk.green(portOptions.quickScanArray[i])} ${chalk.blue('IP:')} ${chalk.green(scannedip)}`);
-                                    data.push({success: false, port: portOptions.quickScanArray[i], ip: scannedip});
+                                    data.push(`{success: false, port: ${portOptions.quickScanArray[i]}, ip: ${scannedip}}`);
                                 }
                             }
                         }
