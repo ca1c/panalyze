@@ -65,13 +65,15 @@ require('yargs')
                             (err, output) => {
                                 if (err) reject(err);
                                 else {
-                                    resolve();
                                     if (output.success == false) {
                                         console.log(`${logSymbols.error} ${chalk.blue('Port:')} ${chalk.green(portOptions.quickScanArray[i])} ${chalk.blue('IP:')} ${chalk.green(scannedip)}`);
                                         data.push(`{success: false, port: ${portOptions.quickScanArray[i]}, ip: ${scannedip}}`);
-                                    } else if (output.success == true) {
+                                        resolve();
+                                    } 
+                                    if (output.success == true) {
                                         console.log(`${logSymbols.success} ${chalk.blue('Port:')} ${chalk.green(portOptions.quickScanArray[i])} ${chalk.blue('IP:')} ${chalk.green(scannedip)}`);
-                                        data.push(`{success: true, port: ${portOptions.quickScanArray[i]}, ip: ${scannedip}}`);
+                                        data.push(`{"success": true, "port": "${portOptions.quickScanArray[i]}", "ip": "${scannedip}"}`);
+                                        resolve();
                                     }
                                 }
                             }
@@ -79,11 +81,13 @@ require('yargs')
                     }
                 })
                 scanPromise.then(() => {
-                        fs.writeFile('/data/temporary.json', data, (err) => {
-                            if (err) throw err;
-    
-                            console.log('file saved temporarily');
-                        });
+                    console.log(data);
+                    let realdata = JSON.stringify(data);
+                    fs.writeFile('data/temporary.json', JSON.parse(realdata), (err) => {
+                        if (err) throw err;
+
+                        console.log('file saved temporarily');
+                    });
                 }).catch((err) => {
                     console.log(err);
                 })
