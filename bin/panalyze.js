@@ -66,11 +66,9 @@ require('yargs')
                                 if (output.success == false) {
                                     console.log(`${logSymbols.error} ${chalk.blue('Port:')} ${chalk.green(portOptions.quickScanArray[i])} ${chalk.blue('IP:')} ${chalk.green(scannedip)}`);
                                     data.push({success: false, port: portOptions.quickScanArray[i], ip: scannedip});
-                                    console.log(data);
                                 } else if (output.success == true) {
                                     console.log(`${logSymbols.success} ${chalk.blue('Port:')} ${chalk.green(portOptions.quickScanArray[i])} ${chalk.blue('IP:')} ${chalk.green(scannedip)}`);
                                     data.push({success: false, port: portOptions.quickScanArray[i], ip: scannedip});
-                                    console.log(data);
                                 }
                             }
                         }
