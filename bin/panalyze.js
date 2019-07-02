@@ -56,25 +56,37 @@ require('yargs')
         function scan() {
             if (argv.options == 'q') {
                 let data = [];
-                for (let i = 0; i < portOptions.quickScanArray.length; i++) {
-                    connectionTester.test(
-                        scannedip,
-                        portOptions.quickScanArray[i],
-                        1000,
-                        (err, output) => {
-                            if (err) throw err;
-                            else {
-                                if (output.success == false) {
-                                    console.log(`${logSymbols.error} ${chalk.blue('Port:')} ${chalk.green(portOptions.quickScanArray[i])} ${chalk.blue('IP:')} ${chalk.green(scannedip)}`);
-                                    data.push({success: false, port: portOptions.quickScanArray[i], ip: scannedip});
-                                } else if (output.success == true) {
-                                    console.log(`${logSymbols.success} ${chalk.blue('Port:')} ${chalk.green(portOptions.quickScanArray[i])} ${chalk.blue('IP:')} ${chalk.green(scannedip)}`);
-                                    data.push(`{success: false, port: ${portOptions.quickScanArray[i]}, ip: ${scannedip}}`);
+                var scanPromise = new Promise(function(resolve, reject) {
+                    for (let i = 0; i < portOptions.quickScanArray.length; i++) {
+                        connectionTester.test(
+                            scannedip,
+                            portOptions.quickScanArray[i],
+                            1000,
+                            (err, output) => {
+                                if (err) reject(err);
+                                else {
+                                    resolve();
+                                    if (output.success == false) {
+                                        console.log(`${logSymbols.error} ${chalk.blue('Port:')} ${chalk.green(portOptions.quickScanArray[i])} ${chalk.blue('IP:')} ${chalk.green(scannedip)}`);
+                                        data.push(`{success: false, port: ${portOptions.quickScanArray[i]}, ip: ${scannedip}}`);
+                                    } else if (output.success == true) {
+                                        console.log(`${logSymbols.success} ${chalk.blue('Port:')} ${chalk.green(portOptions.quickScanArray[i])} ${chalk.blue('IP:')} ${chalk.green(scannedip)}`);
+                                        data.push(`{success: true, port: ${portOptions.quickScanArray[i]}, ip: ${scannedip}}`);
+                                    }
                                 }
                             }
-                        }
-                    )
-                }
+                        )
+                    }
+                })
+                scanPromise.then(() => {
+                        fs.writeFile('/data/temporary.json', data, (err) => {
+                            if (err) throw err;
+    
+                            console.log('file saved temporarily');
+                        });
+                }).catch((err) => {
+                    console.log(err);
+                })
             }
             if (argv.options == 'r') {
                 if (argv.options == 'r' && argv.rangeFN > 0 && argv.rangeSN < 65535) {
