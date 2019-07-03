@@ -67,7 +67,7 @@ require('yargs')
                                 else {
                                     if (output.success == false) {
                                         console.log(`${logSymbols.error} ${chalk.blue('Port:')} ${chalk.green(portOptions.quickScanArray[i])} ${chalk.blue('IP:')} ${chalk.green(scannedip)}`);
-                                        data.push(`{success: false, port: ${portOptions.quickScanArray[i]}, ip: ${scannedip}}`);
+                                        data.push(`{"success": false, "port": "${portOptions.quickScanArray[i]}", "ip": "${scannedip}"}`);
                                         resolve();
                                     } else if (output.success == true) {
                                         console.log(`${logSymbols.success} ${chalk.blue('Port:')} ${chalk.green(portOptions.quickScanArray[i])} ${chalk.blue('IP:')} ${chalk.green(scannedip)}`);
@@ -81,7 +81,7 @@ require('yargs')
                 })
                 scanPromise.then(() => {
                     let realdata = JSON.stringify(data);
-                    fs.writeFile('data/temporary.json', JSON.parse(realdata), (err) => {
+                    fs.writeFile('data/temporary.json', JSON.parse([realdata]), (err) => {
                         if (err) throw err;
 
                         console.log('file saved temporarily');
@@ -156,6 +156,28 @@ require('yargs')
                 let name = device.name.split('.');
                 console.log(`${name[0]} ${chalk.green(device.ip)} ${chalk.blue(device.mac)}`)
             }
+        })
+    })
+    .command('save [name]', 'saves previous scan permanently', (yargs) => {
+        yargs.positional('name', {
+            type: 'string',
+            describe: 'name of the file in which your scan will be saved'
+        })
+    }, function(argv) {
+        if(!argv) {
+            console.log(`${logSymbols.warning} ${chalk.yellow('Please enter the name for the file of the scan you want to save')}`);
+        }
+        fs.access('data/temporary.json', fs.F_OK, (err) => {
+            if (err) throw err;
+            fs.readFile('data/temporary.json', 'utf8', (err1, data) => {
+                if (err1) throw err1;
+                let realdata = JSON.parse(data);
+                
+                fs.writeFile(`data/${argv.name}.json`, realdata, (err2) => {
+                    if (err2) throw err2;
+                    console.log(`${chalk.blue('Your scan has been permanently saved in file:')} ${chalk.green(`${argv.name}.json`)}`)
+                });
+            });
         })
     })
     .help()
