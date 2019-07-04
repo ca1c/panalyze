@@ -168,11 +168,12 @@ require('yargs')
             fs.readFile('data/temporary.json', 'utf8', (err1, data) => {
                 if (err1) throw err1;
                 let realdata = JSON.parse(data);
-                
-                fs.writeFile(`data/${argv.name}.json`, realdata, (err2) => {
-                    if (err2) throw err2;
-                    console.log(`${chalk.blue('Your scan has been permanently saved in file:')} ${chalk.green(`${argv.name}.json`)}`)
-                });
+                for(let i = 0; i < realdata.array.length; i++) {
+                    fs.writeFile(`data/${argv.name}.json`, realdata.array[i], (err2) => {
+                        if (err2) throw err2;
+                        console.log(`${chalk.blue('Your scan has been permanently saved in file:')} ${chalk.green(`${argv.name}.json`)}`)
+                    });
+                }
             });
         })
     })
