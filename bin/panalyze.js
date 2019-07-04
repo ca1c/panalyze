@@ -14,7 +14,7 @@ const portOptions = {
 require('yargs')
     .scriptName("panalyze")
     .usage('$0 <cmd> [args]')
-    .command('analyze [ip] [options] [rangeFN] [rangeSN]', 'ip address', (yargs) => {
+    .command('analyze [ip] [options] [rangeFN] [rangeSN]', 'scans ports of a given ip address', (yargs) => {
         yargs.positional('ip', {
             type: 'string',
             describe: 'ip to be scanned'
@@ -179,6 +179,23 @@ require('yargs')
                 });
             });
         })
+    })
+    .command('open [file]', 'opens save file and returns data in the terminal', (yargs) => {
+        yargs.positional('file', {
+            type: 'string',
+            describe: 'file to open'
+        })
+    }, function(argv) {
+        if(!argv) {
+            console.log(`${logSymbols.warning} ${chalk.yellow('Please enter the name of the file you want to open')}`);
+        }
+        fs.access(argv.file, fs.F_OK, (err) => {
+            if (err) throw err;
+            fs.readFile(argv.file, 'utf8', (err1, data) => {
+                if(err1) throw err1;
+                let realdata = JSON.parse(data);
+            })
+        });
     })
     .help()
     .argv
