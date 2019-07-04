@@ -56,15 +56,14 @@ require('yargs')
         function scan() {
             if (argv.options == 'q') {
                 let data = [];
-                var scanPromise = new Promise(function(resolve, reject) {
                     for (let i = 0; i < portOptions.quickScanArray.length; i++) {
-                        connectionTester.test(
-                            scannedip,
-                            portOptions.quickScanArray[i],
-                            1000,
-                            (err, output) => {
-                                if (err) reject(err);
-                                else {
+                        var scanPromise = new Promise(function(resolve, reject) {
+                            connectionTester.test(
+                                scannedip,
+                                portOptions.quickScanArray[i],
+                                1000,
+                                (err, output) => {
+                                    if (err) reject(err);
                                     if (output.success == false) {
                                         console.log(`${logSymbols.error} ${chalk.blue('Port:')} ${chalk.green(portOptions.quickScanArray[i])} ${chalk.blue('IP:')} ${chalk.green(scannedip)}`);
                                         data.push(`{"success": false, "port": "${portOptions.quickScanArray[i]}", "ip": "${scannedip}"}`);
@@ -75,24 +74,23 @@ require('yargs')
                                         resolve();
                                     }
                                 }
-                            }
-                        )
+                            )
+                        })
+                        scanPromise.then(() => {
+                            let realdata = JSON.stringify(data);
+                            fs.writeFile('data/temporary.json', JSON.parse([realdata]), (err) => {
+                                if (err) throw err;
+        
+                                console.log('file saved temporarily');
+                            });
+                        }).catch((err) => {
+                            console.log(err);
+                        })
                     }
-                })
-                scanPromise.then(() => {
-                    let realdata = JSON.stringify(data);
-                    fs.writeFile('data/temporary.json', JSON.parse([realdata]), (err) => {
-                        if (err) throw err;
-
-                        console.log('file saved temporarily');
-                    });
-                }).catch((err) => {
-                    console.log(err);
-                })
             }
             if (argv.options == 'r') {
-                let data = [];
                 if (argv.options == 'r' && argv.rangeFN > 0 && argv.rangeSN < 65535) {
+                    let data = [];
                     var scanPromise = new Promise(function(resolve, reject) {
                         for (let i = argv.rangeFN; i - 1 < argv.rangeSN; i++) {
                             connectionTester.test(
@@ -101,16 +99,14 @@ require('yargs')
                                 1000,
                                 (err, output) => {
                                     if (err) reject(err);
-                                    else {
-                                        if (output.success == false) {
-                                            console.log(`${logSymbols.error} ${chalk.blue('Port:')} ${chalk.green(i)} ${chalk.blue('IP:')} ${chalk.green(scannedip)}`);
-                                            data.push(`{success: false, port: ${i}, ip: ${scannedip}}`);
-                                            resolve();
-                                        } else if (output.success == true) {
-                                            console.log(`${logSymbols.success} ${chalk.blue('Port:')} ${chalk.green(i)} ${chalk.blue('IP:')} ${chalk.green(scannedip)}`);
-                                            data.push(`{"success": true, "port": "${i}", "ip": "${scannedip}"}`);
-                                            resolve();
-                                        }
+                                    if (output.success == false) {
+                                        console.log(`${logSymbols.error} ${chalk.blue('Port:')} ${chalk.green(i)} ${chalk.blue('IP:')} ${chalk.green(scannedip)}`);
+                                        data.push(`{success: false, port: ${i}, ip: ${scannedip}}`);
+                                        resolve();
+                                    } else if (output.success == true) {
+                                        console.log(`${logSymbols.success} ${chalk.blue('Port:')} ${chalk.green(i)} ${chalk.blue('IP:')} ${chalk.green(scannedip)}`);
+                                        data.push(`{"success": true, "port": "${i}", "ip": "${scannedip}"}`);
+                                        resolve();
                                     }
                                 }
                             )
