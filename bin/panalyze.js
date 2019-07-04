@@ -77,8 +77,8 @@ require('yargs')
                             )
                         })
                         scanPromise.then(() => {
-                            let realdata = JSON.stringify(data);
-                            fs.writeFile('data/temporary.json', JSON.parse([realdata]), (err) => {
+                            let realdata = JSON.stringify(`{"array": [${data}]}`);
+                            fs.writeFile('data/temporary.json', JSON.parse(realdata), (err) => {
                                 if (err) throw err;
         
                                 console.log('file saved temporarily');
