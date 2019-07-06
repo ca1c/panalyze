@@ -80,8 +80,6 @@ require('yargs')
                             let realdata = JSON.stringify(`{"array": [${data}]}`);
                             fs.writeFile('data/temporary.json', JSON.parse(realdata), (err) => {
                                 if (err) throw err;
-        
-                                console.log('file saved temporarily');
                             });
                         }).catch((err) => {
                             console.log(err);
@@ -115,8 +113,6 @@ require('yargs')
                                 let realdata = JSON.stringify(`{"array": [${data}]}`);
                                 fs.writeFile('data/temporary.json', JSON.parse(realdata), (err) => {
                                     if (err) throw err;
-            
-                                    console.log('file saved temporarily');
                                 });
                             }).catch((err) => {
                                 console.log(err);
@@ -186,11 +182,15 @@ require('yargs')
         if(!argv) {
             console.log(`${logSymbols.warning} ${chalk.yellow('Please enter the name of the file you want to open')}`);
         }
-        fs.access(argv.file, fs.F_OK, (err) => {
+        fs.access(`data/${argv.file}`, fs.F_OK, (err) => {
             if (err) throw err;
-            fs.readFile(argv.file, 'utf8', (err1, data) => {
+            fs.readFile(`data/${argv.file}`, 'utf8', (err1, data) => {
                 if(err1) throw err1;
                 let realdata = JSON.parse(data);
+                for(let i = 0; i < realdata.array.length; i++) {
+                    let selected = realdata.array[i];
+                    console.log(`${chalk.blue('ip:')} ${chalk.green(selected.ip)} ${chalk.blue('port:')} ${chalk.green(selected.port)} ${chalk.blue('success:')} ${selected.success == true ? chalk.green(selected.success) : chalk.red(selected.success)}`);
+                }
             })
         });
     })
