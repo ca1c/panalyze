@@ -1,7 +1,7 @@
 {
   "name": "panalyze",
   "version": "0.1.0",
-  "description": "A portscanner written in nodejs",
+  "description": "A portscanner written in NodeJS",
   "main": "index.js",
   "bin": {
     "panalyze": "./bin/panalyze"
@@ -11,6 +11,10 @@
   },
   "author": "Talon Bragg",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/talonbragg/panalyze.git"
+  },
   "dependencies": {
     "chalk": "^2.4.2",
     "connection-tester": "^0.2.0",
