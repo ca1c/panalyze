@@ -10,7 +10,7 @@
 `panalyze <cmd> [args]`
 
 Commands:
-  `panalyze analyze [ip] [options] [rangeFN] [rangeSN]`           scans ports of a given ip address
+  `panalyze scan [ip] [options] [rangeFN] [rangeSN]`           scans ports of a given ip address
 
   `panalyze publicip`                                             returns client public ip
 

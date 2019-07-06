@@ -14,7 +14,7 @@ const portOptions = {
 require('yargs')
     .scriptName("panalyze")
     .usage('$0 <cmd> [args]')
-    .command('analyze [ip] [options] [rangeFN] [rangeSN]', 'scans ports of a given ip address', (yargs) => {
+    .command('scan [ip] [options] [rangeFN] [rangeSN]', 'scans ports of a given ip address', (yargs) => {
         yargs.positional('ip', {
             type: 'string',
             describe: 'ip to be scanned'
