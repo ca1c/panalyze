@@ -1,14 +1,26 @@
 # panalyze
 **port scanner built in nodejs**
 
+**Installation:**
+
+`$ [sudo] npm i panalyze -g`
+
 **Usage:**
 
-`$ panalyze analyze [ip] [options] [rangeFN] [rangeSN]`
+`panalyze <cmd> [args]`
 
-`[ip]` is the ip of the host that you want to scan.
+Commands:
+  `panalyze analyze [ip] [options] [rangeFN] [rangeSN]`           scans ports of a given ip address
 
-you have two `[options]` for scan type, either `q` for quickscan or `r` for range scan.
+  `panalyze publicip`                                             returns client public ip
 
-if you choose range scan you are going to use `[rangeFN]` and `[rangeSN]` or in other words, the first number and the second number of the range of ports you want to scan.
+  `panalyze localaddresses`                                       returns ip addresses and mac addresses of all local devices connected to your network
 
-`[rangeFN]` needs to be greater than **0** and `[rangeSN]` needs to be less than 65535.
+  `panalyze save [name]`                                          saves previous scan permanently
+
+  `panalyze open [file]`                                          opens save file and returns data in the terminal
+
+Options:
+  `--version`  Show version number  
+
+  `--help`     Show help                                                 
