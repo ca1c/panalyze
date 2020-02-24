@@ -6,15 +6,16 @@ const chalk = require('chalk');
 const getIP = require('external-ip')();
 const find = require('local-devices');
 const fs = require('fs');
+const yarg = require('yargs');
 
 const portOptions = {
     quickScanArray: [20, 21, 22, 23, 25, 53, 67, 68, 69, 80, 110, 123, 137, 138, 139, 143, 161, 162, 179, 389, 443, 636, 989, 990]
 }
 
-require('yargs')
-    .scriptName("panalyze")
-    .usage('$0 <cmd> [args]')
-    .command('scan [ip] [options] [rangeFN] [rangeSN]', 'scans ports of a given ip address', (yargs) => {
+
+    yarg.scriptName("panalyze");
+    yarg.usage('$0 <cmd> [args]');
+    yarg.command('scan [ip] [options] [rangeFN] [rangeSN]', 'scans ports of a given ip address', (yargs) => {
         yargs.positional('ip', {
             type: 'string',
             describe: 'ip to be scanned'
@@ -127,8 +128,8 @@ require('yargs')
                 }
             }
         }
-    })
-    .command('publicip', 'returns client public ip', (yargs) => {
+    });
+    yarg.command('publicip', 'returns client public ip', (yargs) => {
         console.log(chalk.green('Searching...'))
     }, function (argv) {
         getIP((err, ip) => {
@@ -137,8 +138,8 @@ require('yargs')
             }
             console.log(chalk.blue(ip));
         });
-    })
-    .command('localaddresses', 'returns ip addresses and mac addresses of all local devices connected to your network', (yargs) => {
+    });
+    yarg.command('localaddresses', 'returns ip addresses and mac addresses of all local devices connected to your network', (yargs) => {
         console.log(chalk.green('Searching...'))
     }, function (argv) {
         find().then(devices => {
@@ -149,8 +150,8 @@ require('yargs')
                 console.log(`${name[0]} ${chalk.green(device.ip)} ${chalk.blue(device.mac)}`)
             }
         })
-    })
-    .command('save [name]', 'saves previous scan permanently', (yargs) => {
+    });
+    yarg.command('save [name]', 'saves previous scan permanently', (yargs) => {
         yargs.positional('name', {
             type: 'string',
             describe: 'name of the file in which your scan will be saved'
@@ -172,8 +173,8 @@ require('yargs')
                 }
             });
         })
-    })
-    .command('open [file]', 'opens save file and returns data in the terminal', (yargs) => {
+    });
+    yarg.command('open [file]', 'opens save file and returns data in the terminal', (yargs) => {
         yargs.positional('file', {
             type: 'string',
             describe: 'file to open'
@@ -193,6 +194,6 @@ require('yargs')
                 }
             })
         });
-    })
-    .help()
-    .argv
+    });
+    yarg.help()
+    yarg.argv
